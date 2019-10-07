@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,KAAK,CAAC;EACJ,MAAM,EAAE,KAAK;EACb,cAAc,EAAE,GAAG;CACpB",
+    "sources": [
+        "Pathfinding-Visualizer.scss"
+    ],
+    "names": [],
+    "file": "Pathfinding-Visualizer.css"
+}
