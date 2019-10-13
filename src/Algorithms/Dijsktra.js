@@ -39,7 +39,7 @@ function UpdateUnvisitedNeighbors(closestNode, nodes) {
 
 function GetUnvisitedNeighbors(node, nodes) {
   const neighbors = [];
-  const {col, row} = node;
+  const { col, row } = node;
   if (row > 0) neighbors.push(nodes[row - 1][col]);
   if (row < nodes.length - 1) neighbors.push(nodes[row + 1][col]);
   if (col > 0) neighbors.push(nodes[row][col - 1]);
