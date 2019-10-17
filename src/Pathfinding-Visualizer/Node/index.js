@@ -1,24 +1,16 @@
-import React, { Component } from 'react'
+import React from 'react'
 import './Node.css';
 
-export default class Node extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-
-    }
-  }
-  
-  render() {
-    const { node } = this.props;
-    const { col, row, isStart, isFinish } = node;
-    const extraClassess = 
-      isStart ? 'node-start' 
-      : isFinish ? 'node-finish' 
-      : ''
-    return (
-      <div className={`node ${extraClassess}`}>
-      </div>
-    )
-  }
+const Node = (props) => {
+  const { node } = props;
+  const { col, row, isStart, isFinish } = node;
+  const extraClassess = 
+    isStart ? 'node-start' 
+    : isFinish ? 'node-finish' 
+    : ''
+  return (
+    <div id={`node-${col}-${row}`} className={`node ${extraClassess}`}/>
+  )
 }
+ 
+export default Node;
