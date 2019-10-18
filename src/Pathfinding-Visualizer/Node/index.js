@@ -3,13 +3,13 @@ import './Node.css';
 
 const Node = (props) => {
   const { node } = props;
-  const { col, row, isStart, isFinish } = node;
+  const { x, y, isStart, isFinish } = node;
   const extraClassess = 
     isStart ? 'node-start' 
     : isFinish ? 'node-finish' 
     : ''
   return (
-    <div id={`node-${col}-${row}`} className={`node ${extraClassess}`}/>
+    <div id={`node-${x}-${y}`} className={`node ${extraClassess}`}/>
   )
 }
  

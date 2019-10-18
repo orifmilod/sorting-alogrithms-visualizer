@@ -9,7 +9,7 @@ export function Dijkstra(nodes, startNode, finishNode) {
       return -1;
 
     const visitedNodesInOrder = [];
-    nodes[startNode.col][startNode.row].distance = 0;
+    nodes[startNode.x][startNode.y].distance = 0;
     const unvisitedNodes = getAllNodes(nodes);
     while (!!unvisitedNodes.length) {
       SortNodesByDistance(unvisitedNodes);
@@ -40,13 +40,18 @@ function UpdateUnvisitedNeighbors(currentNode, nodes) {
 
 function GetUnvisitedNeighbors(node, nodes) {
   const neighbors = [];
-  const { col, row } = node;
-  if (row > 0) neighbors.push(nodes[row - 1][col]);
-  if (row < nodes.length - 1) neighbors.push(nodes[row + 1][col]);
-  if (col > 0) neighbors.push(nodes[row][col - 1]);
-  if (col < nodes[0].length - 1) neighbors.push(nodes[row][col + 1]);
+  const { x, y } = node;
+  //Top Side
+  if (y > 0) neighbors.push(nodes[y - 1][x]);
+  //Bottom side
+  if (y < nodes.length - 1) neighbors.push(nodes[y  + 1][x]);
+  //Right side
+  if (x < nodes[0].length - 1) neighbors.push(nodes[y][x + 1]);
+  //Left side
+  if (x > 0) neighbors.push(nodes[y][x - 1]);
   return neighbors.filter(neighbor => !neighbor.isVisited);
 }
+
 
 function SortNodesByDistance(unvisitedNodes) {
   unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
