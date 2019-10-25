@@ -35,9 +35,9 @@ class App extends Component {
   render() {    
     return (
       <>
-        {/* <PathfindingVisualizer/> */}
-        <button onClick={this.handleBubbleSort}> Bubble Sort </button>
-        <button onClick={this.handleMergeSort}> Merge Sort </button>
+        <PathfindingVisualizer/>
+        {/* <button onClick={this.handleBubbleSort}> Bubble Sort </button>
+        <button onClick={this.handleMergeSort}> Merge Sort </button> */}
       </>
     )
   }

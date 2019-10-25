@@ -13,6 +13,10 @@
   background: red;
 }
 
+.node-wall {
+  background: #0c3547;
+}
+
 .node-visited {
   -webkit-animation-name: visitedAnimation;
           animation-name: visitedAnimation;
