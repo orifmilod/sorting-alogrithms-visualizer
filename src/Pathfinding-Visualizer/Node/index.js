@@ -1,6 +1,20 @@
 import React from 'react'
 import './Node.css';
 
+export function createNode(x, y, isStart, isFinish) {
+  return {
+    x,
+    y,
+    isStart,
+    isFinish,
+    distance: Infinity,
+    heuristicDistance: Infinity,
+    isWall: false,
+    isVisited: false,
+    previousNode: null,
+  }
+}
+
 const Node = (props) => {
   const { node, onMouseDown, onMouseUp, onMouseEnter } = props;
   const { x, y, isStart, isFinish, isWall } = node;

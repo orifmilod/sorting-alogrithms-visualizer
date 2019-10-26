@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import { Dijkstra, GetNodesInShortestPathOrder } from '../Algorithms/Dijsktra';
-import Node from './Node';
+import { Dijkstra, GetNodesInShortestPathOrder } from '../Algorithms/PathFinding/Dijsktra';
+import AStar from '../Algorithms/PathFinding/A-Star';
+import Node, {createNode} from './Node';
 import './Pathfinding-Visualizer.css';
 
 const START_NODE_Y = 0;
 const START_NODE_X = 0;
-const FINISH_NODE_Y = 18;
-const FINISH_NODE_X = 9;
+const FINISH_NODE_Y = 15;
+const FINISH_NODE_X = 1;
 
 export default function PathfindingVisualizer(params) {
   const [nodes, updateNodes] = useState([]);
+  // const [currentAlgorithm, updateAlgorithm] = useState(undefined);
   const [mouseIsPressed, updateMousePressed] = useState(false);
 
   useEffect(() => {
-    const nodes = getInitialGrid(65, 25);
+    const nodes = getInitialGrid(25, 25);
     updateNodes(nodes)
   }, [])
 
@@ -23,6 +25,13 @@ export default function PathfindingVisualizer(params) {
     const visitedNodesInOrder = Dijkstra(nodes, startNode, finishNode);
     const nodesInShortedPathOrder = GetNodesInShortestPathOrder(finishNode);
     animateDijkstra(visitedNodesInOrder, nodesInShortedPathOrder);
+  }
+
+  function visualizeAStar () {
+    const startNode = nodes[START_NODE_Y][START_NODE_X]
+    const finishNode = nodes[FINISH_NODE_Y][FINISH_NODE_X];
+    const { closedNodes, path } = AStar(nodes, startNode, finishNode);
+    animateDijkstra(closedNodes, path);
   }
 
   function animateShortestPath(nodesInShortestPathOrder) {
@@ -65,7 +74,8 @@ export default function PathfindingVisualizer(params) {
   }
   return (
     <>
-    <button onClick={visualizeDijstra}> Visualize </button>
+    <button onClick={visualizeDijstra}> Visualize Dijkstra </button>
+    <button onClick={visualizeAStar}> Visualize A* </button>
     <div className='grid'>
       {nodes.map((row, indexRow) => {
         return (
@@ -85,25 +95,14 @@ function getInitialGrid(x, y) {
   for (let j = 0; j < y; j++) {
     const currentRow = []
     for (let i = 0; i < x; i++) {
-      const currentNode = createNode(i, j)
+      let isStart = i === START_NODE_X && j === START_NODE_Y ? true : false
+      let isFinish = i === FINISH_NODE_X && j ===  FINISH_NODE_Y ? true : false
+      const currentNode = createNode(i, j, isStart, isFinish)
       currentRow.push(currentNode)
     }
     nodes.push(currentRow);
   }
   return nodes;
-}
-
-function createNode(x, y) {
-  return {
-    x,
-    y,
-    isStart: x === START_NODE_X && y === START_NODE_Y,
-    isFinish: x === FINISH_NODE_X && y ===  FINISH_NODE_Y,
-    distance: Infinity,
-    isWall: false,
-    isVisited: false,
-    previousNode: null
-  }
 }
 
 
