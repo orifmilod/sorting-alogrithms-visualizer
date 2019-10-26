@@ -4,6 +4,7 @@
   previous node, effectively allowing us to compute the shortest path
   by backtracking from the finish node.
 */
+import { getAllNodes } from '../Utils';
 export function Dijkstra(nodes, startNode, finishNode) {
     if(!startNode || !finishNode || startNode === finishNode)
       return -1;
@@ -57,15 +58,6 @@ function SortNodesByDistance(unvisitedNodes) {
   unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
 }
 
-function getAllNodes(grid) {
-  const nodes = [];
-  for (const row of grid) {
-    for (const node of row) {
-      nodes.push(node);
-    }
-  }
-  return nodes;
-}
 
 export function GetNodesInShortestPathOrder(finishNode)
 {
