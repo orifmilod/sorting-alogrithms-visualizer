@@ -3,19 +3,30 @@ import { Dijkstra, GetNodesInShortestPathOrder } from '../Algorithms/PathFinding
 import AStar from '../Algorithms/PathFinding/A-Star';
 import Node, {createNode} from './Node';
 import './Pathfinding-Visualizer.css';
+// import { Input, InputNumber, Form } from 'antd';
+
+// const arr2 = [{ x:1, y: 2, asd: 123}]
+// const arr = []
+// arr.push(arr2[0])
+// arr2[0].x  = 5;
+// console.log(arr, arr2)
+// console.log(arr.includes(arr2[0]))
+
 
 const START_NODE_Y = 0;
 const START_NODE_X = 0;
-const FINISH_NODE_Y = 15;
-const FINISH_NODE_X = 1;
-
-export default function PathfindingVisualizer(params) {
+const FINISH_NODE_Y = 20;
+const FINISH_NODE_X = 15
+export default function PathfindingVisualizer() {
   const [nodes, updateNodes] = useState([]);
-  // const [currentAlgorithm, updateAlgorithm] = useState(undefined);
   const [mouseIsPressed, updateMousePressed] = useState(false);
-
+  
+  const [algorithm, updateAlgorithm] = useState(undefined);
+  const [startRow, updateRow] = useState(0);
+  const [startCol, updateCol] = useState(0);
+  
   useEffect(() => {
-    const nodes = getInitialGrid(25, 25);
+    const nodes = getInitialGrid(55, 25);
     updateNodes(nodes)
   }, [])
 
@@ -30,8 +41,8 @@ export default function PathfindingVisualizer(params) {
   function visualizeAStar () {
     const startNode = nodes[START_NODE_Y][START_NODE_X]
     const finishNode = nodes[FINISH_NODE_Y][FINISH_NODE_X];
-    const { closedNodes, path } = AStar(nodes, startNode, finishNode);
-    animateDijkstra(closedNodes, path);
+    const { checked, path } = AStar(nodes, startNode, finishNode);
+    animateDijkstra(checked, path);
   }
 
   function animateShortestPath(nodesInShortestPathOrder) {
@@ -73,21 +84,21 @@ export default function PathfindingVisualizer(params) {
     updateMousePressed(false);
   }
   return (
-    <>
-    <button onClick={visualizeDijstra}> Visualize Dijkstra </button>
-    <button onClick={visualizeAStar}> Visualize A* </button>
-    <div className='grid'>
-      {nodes.map((row, indexRow) => {
-        return (
-          <div key={indexRow}> 
-            {row.map((node, nodeIndex) => (
-              <Node key={nodeIndex} node={node} onMouseUp={handleMouseUp} onMouseDown={handleMouseDown} onMouseEnter={handleMouseEnter}/>
-            ))}
-          </div>
-        )
-      })}
-    </div>
-  </>
+    <div>
+        <button type="primary" onClick={visualizeDijstra}> Visualize Dijkstra </button>
+        <button type="primary" onClick={visualizeAStar}> Visualize A* </button>
+        <div className='grid'>
+          {nodes.map((row, indexRow) => {
+            return (
+              <div className='column' key={indexRow}> 
+                {row.map((node, nodeIndex) => (
+                  <Node key={nodeIndex} node={node} onMouseUp={handleMouseUp} onMouseDown={handleMouseDown} onMouseEnter={handleMouseEnter}/>
+                ))}
+              </div>
+            )
+          })}
+      </div>
+     </div>
   )  
 }
 function getInitialGrid(x, y) {
