@@ -1,0 +1,5 @@
+.not-found-container {
+  background-image: url('../../img/not-found.jpg');
+  width: 100vw;
+  height: 100vh;
+}

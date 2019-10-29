@@ -10,7 +10,7 @@ export default function Navbar() {
   return(
     <Row>
      <Col span={12}>
-        <Menu onClick={() => console.log('CLicked') } mode="horizontal">
+        <Menu mode="horizontal">
           <Menu.Item key="mail">
             <Icon type="radar-chart" style={{ fontSize: '24px' }} />
             Algo Visualizer
@@ -18,8 +18,8 @@ export default function Navbar() {
 
           <SubMenu title={ <span className="submenu-title-wrapper">  <Icon type="setting" /> Algorithms </span>}>
             <Menu.ItemGroup title="Pathfinding Algorithms">
-              <Menu.Item>Dijkstra</Menu.Item>
-              <Menu.Item>A*</Menu.Item>
+              <Menu.Item onClick={() => console.log('1')} key='dijkstra'>Dijkstra</Menu.Item>
+              <Menu.Item onClick={() => console.log('2')} key='A*'>A*</Menu.Item>
             </Menu.ItemGroup>
           </SubMenu>
           <Button type="primary" shape="round" icon="bulb" size='default'>

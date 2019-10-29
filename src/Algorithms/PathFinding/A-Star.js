@@ -66,7 +66,7 @@ export default function AStar(nodes, startNode, finishNode)
 {
   //TODO: Catch edge cases.
   if(startNode.x === finishNode.x && startNode.y === finishNode.y)
-    return -1;
+    return -1
 
   //Assigning Start Node distance.
   nodes[startNode.y][startNode.x].heuristicDistance = heuristic(startNode, finishNode);

@@ -1,17 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Dijkstra, GetNodesInShortestPathOrder } from '../Algorithms/PathFinding/Dijsktra';
-import AStar from '../Algorithms/PathFinding/A-Star';
+import { Dijkstra, GetNodesInShortestPathOrder } from '../../Algorithms/PathFinding/Dijsktra';
+import AStar from '../../Algorithms/PathFinding/A-Star';
 import Node, {createNode} from './Node';
 import './Pathfinding-Visualizer.css';
-// import { Input, InputNumber, Form } from 'antd';
-
-// const arr2 = [{ x:1, y: 2, asd: 123}]
-// const arr = []
-// arr.push(arr2[0])
-// arr2[0].x  = 5;
-// console.log(arr, arr2)
-// console.log(arr.includes(arr2[0]))
-
 
 const START_NODE_Y = 0;
 const START_NODE_X = 0;
@@ -21,7 +12,6 @@ export default function PathfindingVisualizer() {
   const [nodes, updateNodes] = useState([]);
   const [mouseIsPressed, updateMousePressed] = useState(false);
   
-  const [algorithm, updateAlgorithm] = useState(undefined);
   const [startRow, updateRow] = useState(0);
   const [startCol, updateCol] = useState(0);
   
@@ -115,7 +105,6 @@ function getInitialGrid(x, y) {
   }
   return nodes;
 }
-
 
 function getNewGridWithWallToggled (nodes, x, y) {
   const newGrid = nodes.slice();
