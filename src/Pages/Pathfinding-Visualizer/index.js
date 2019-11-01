@@ -1,38 +1,41 @@
 import React, { useState, useEffect } from 'react'
-import { Dijkstra, GetNodesInShortestPathOrder } from '../../Algorithms/PathFinding/Dijsktra';
-import AStar from '../../Algorithms/PathFinding/A-Star';
-import Node, {createNode} from './Node';
+import { connect, useSelector } from 'react-redux';
 import './Pathfinding-Visualizer.css';
 
-const START_NODE_Y = 0;
-const START_NODE_X = 0;
-const FINISH_NODE_Y = 20;
-const FINISH_NODE_X = 15
-export default function PathfindingVisualizer() {
-  const [nodes, updateNodes] = useState([]);
-  const [mouseIsPressed, updateMousePressed] = useState(false);
-  
-  const [startRow, updateRow] = useState(0);
-  const [startCol, updateCol] = useState(0);
-  
+import { ASTAR, DIJKSTRA } from '../../const/Algorithms';
+import AStar from '../../Algorithms/PathFinding/A-Star';
+import Dijkstra  from '../../Algorithms/PathFinding/Dijsktra';
+import { VisualizeAlgorithm } from '../../Actions/algoAction';
+import Node  from './Node';
+import { getInitialGrid, getNewGridWithWallToggled  } from './utils';
+
+function PathfindingVisualizer({ nodes, algorithm, visualizeState, visualizeAlgorithm }) { 
+  const { startNode, finishNode } = nodes;
+  const [ mouseIsPressed, updateMousePressed ] = useState(false);
+  const [ grid, updateGrid ] = useState(getInitialGrid(55, 25, startNode, finishNode));
   useEffect(() => {
-    const nodes = getInitialGrid(55, 25);
-    updateNodes(nodes)
-  }, [])
-
-  function visualizeDijstra () {
-    const startNode = nodes[START_NODE_Y][START_NODE_X]
-    const finishNode = nodes[FINISH_NODE_Y][FINISH_NODE_X];
-    const visitedNodesInOrder = Dijkstra(nodes, startNode, finishNode);
-    const nodesInShortedPathOrder = GetNodesInShortestPathOrder(finishNode);
-    animateDijkstra(visitedNodesInOrder, nodesInShortedPathOrder);
-  }
-
-  function visualizeAStar () {
-    const startNode = nodes[START_NODE_Y][START_NODE_X]
-    const finishNode = nodes[FINISH_NODE_Y][FINISH_NODE_X];
-    const { checked, path } = AStar(nodes, startNode, finishNode);
-    animateDijkstra(checked, path);
+    updateGrid(getInitialGrid(55, 25, startNode, finishNode))
+  }, [startNode, finishNode])
+  function StartAlgorithm() {
+    let checked, path;
+    visualizeAlgorithm(false)
+    switch (algorithm) {
+      case ASTAR: {
+        const result = AStar(grid, startNode, finishNode);
+          path = result.path;
+        checked = result.checked;
+        break;
+      }
+      case DIJKSTRA: {
+        const result = Dijkstra(grid, startNode, finishNode);
+        path = result.path;
+        checked = result.checked;
+        break;
+      }
+      default:
+        break;
+    }
+    animateGrid(checked, path);
   }
 
   function animateShortestPath(nodesInShortestPathOrder) {
@@ -43,7 +46,8 @@ export default function PathfindingVisualizer() {
       }, 50 * i);
     }
   }
-  function animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
+  
+  function animateGrid(visitedNodesInOrder, nodesInShortestPathOrder) {
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
         setTimeout(() => {
@@ -59,26 +63,28 @@ export default function PathfindingVisualizer() {
   }
 
   function handleMouseDown(x, y) {
-    const newNodes = getNewGridWithWallToggled(nodes, x, y);
-    updateNodes(newNodes)
+    const newGrid = getNewGridWithWallToggled(grid, x, y);
+    updateGrid(newGrid);
     updateMousePressed(true);
   }
 
   function handleMouseEnter(x, y) {
     if (!mouseIsPressed) return;
-    const newNodes = getNewGridWithWallToggled(nodes, x, y);
-    updateNodes(newNodes)
+    const newGrid = getNewGridWithWallToggled(grid, x, y);
+    updateGrid(newGrid);
   }
 
   function handleMouseUp() {
     updateMousePressed(false);
   }
+
+  if(visualizeState)
+    StartAlgorithm();
+
   return (
     <div>
-        <button type="primary" onClick={visualizeDijstra}> Visualize Dijkstra </button>
-        <button type="primary" onClick={visualizeAStar}> Visualize A* </button>
         <div className='grid'>
-          {nodes.map((row, indexRow) => {
+          {grid.map((row, indexRow) => {
             return (
               <div className='column' key={indexRow}> 
                 {row.map((node, nodeIndex) => (
@@ -91,28 +97,18 @@ export default function PathfindingVisualizer() {
      </div>
   )  
 }
-function getInitialGrid(x, y) {
-  const nodes = []
-  for (let j = 0; j < y; j++) {
-    const currentRow = []
-    for (let i = 0; i < x; i++) {
-      let isStart = i === START_NODE_X && j === START_NODE_Y ? true : false
-      let isFinish = i === FINISH_NODE_X && j ===  FINISH_NODE_Y ? true : false
-      const currentNode = createNode(i, j, isStart, isFinish)
-      currentRow.push(currentNode)
-    }
-    nodes.push(currentRow);
+
+const mapStateToProps = (state) => {
+  return {
+    nodes: state.nodes,
+    visualizeState: state.algorithm.visualizeState,
+    algorithm: state.algorithm.algorithm
   }
-  return nodes;
 }
 
-function getNewGridWithWallToggled (nodes, x, y) {
-  const newGrid = nodes.slice();
-  const node = newGrid[y][x];
-  const newNode = {
-    ...node,
-    isWall: !node.isWall,
-  };
-  newGrid[y][x] = newNode;
-  return newGrid;
-};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    visualizeAlgorithm: visualizeState => dispatch(VisualizeAlgorithm(visualizeState))
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps) (PathfindingVisualizer);

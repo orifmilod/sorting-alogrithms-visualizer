@@ -5,12 +5,14 @@
   by backtracking from the finish node.
 */
 import { getAllNodes } from '../Utils';
-export function Dijkstra(nodes, startNode, finishNode) {
-    if(!startNode || !finishNode || startNode === finishNode)
+export default function Dijkstra(nodes, start, finish) {
+    if(!start || !finish || start === finish)
       return -1;
 
+    const startNode = nodes[start.y][start.x];
+    const finishNode = nodes[finish.y][finish.x];
     const visitedNodesInOrder = [];
-    nodes[startNode.x][startNode.y].distance = 0;
+    nodes[startNode.y][startNode.x].distance = 0;
     const unvisitedNodes = getAllNodes(nodes);
     while (!!unvisitedNodes.length) {
       SortNodesByDistance(unvisitedNodes);
@@ -22,8 +24,10 @@ export function Dijkstra(nodes, startNode, finishNode) {
       if (closestNode.distance === Infinity) return visitedNodesInOrder;
       closestNode.visited = true;
       visitedNodesInOrder.push(closestNode);
-      if(closestNode === finishNode)  
-        return visitedNodesInOrder;
+      if(closestNode === finishNode)   {
+        const path = GetNodesInShortestPathOrder(finishNode);
+        return { checked: visitedNodesInOrder, path };
+      }
 
       UpdateUnvisitedNeighbors(closestNode, nodes);
     }
@@ -31,10 +35,11 @@ export function Dijkstra(nodes, startNode, finishNode) {
 
 function UpdateUnvisitedNeighbors(currentNode, nodes) {
   const unvisitedNeighbors = GetUnvisitedNeighbors(currentNode, nodes);
-  for (const neighbor of unvisitedNeighbors) {
-    if(neighbor.distance > currentNode.distance + 1) {
-      neighbor.distance = currentNode.distance + 1;
-      neighbor.previousNode = currentNode;
+  for (let i = 0; i < unvisitedNeighbors.length; i++) {
+    const neighbour = unvisitedNeighbors[i];
+    if(neighbour.distance > currentNode.distance + 1) {
+      neighbour.distance = currentNode.distance + 1;
+      neighbour.previousNode = currentNode;
     }
   }
 }
@@ -63,8 +68,7 @@ export function GetNodesInShortestPathOrder(finishNode)
 {
   const nodesInShortestPathOrder = []
   let currentNode = finishNode;
-  while(currentNode !== null)
-  {
+  while(currentNode !== null) {
     nodesInShortestPathOrder.unshift(currentNode);
     currentNode = currentNode.previousNode;
   }

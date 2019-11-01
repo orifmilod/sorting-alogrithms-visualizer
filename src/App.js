@@ -1,21 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PathfindingVisualizer from './Pages/Pathfinding-Visualizer';
-import NotFound from './Pages/NotFound';
-
-import Navbar from './components/Navbar'
-import 'antd/dist/antd.css'
-import { Route, BrowserRouter, Switch, Redirect } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import 'antd/dist/antd.css';
+import { Provider } from 'react-redux';
+import store from './Store';
 
 export default function App() {
-  const [algorithm, updateAlgorithm] = useState(undefined);
-
   return (
-    <BrowserRouter>
+    <Provider store={store}>
       <Navbar/>
-        <Switch>
-        <Route exact to='/asd' component={PathfindingVisualizer} />
-        <Route component={NotFound}/>
-      </Switch>
-    </BrowserRouter>
+      <PathfindingVisualizer/>
+    </Provider>
   )
 }
+

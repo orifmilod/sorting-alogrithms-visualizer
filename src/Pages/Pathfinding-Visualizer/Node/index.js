@@ -28,7 +28,7 @@ const Node = (props) => {
       id={`node-${x}-${y}`} 
       className={`node ${extraClassess}`}
       onMouseDown={() => onMouseDown(x, y)}
-      onMouseUp={() => onMouseUp(x, y)}
+      onMouseUp={() => {console.log('UP'); onMouseUp(x, y)}}
       onMouseEnter={() => onMouseEnter(x, y)}
     />
   )
