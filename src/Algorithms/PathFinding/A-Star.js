@@ -114,5 +114,5 @@ export default function AStar(nodes, startNode, finishNode)
       }
     }
   }
-  return 'There is no solution! 😓';
+  return { checked, path: -1 };
 }

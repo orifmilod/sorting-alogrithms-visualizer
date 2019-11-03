@@ -21,7 +21,8 @@ export default function Dijkstra(nodes, start, finish) {
       if (closestNode.isWall) continue;
       // If the closest node is at a distance of infinity,
       // we must be trapped and should therefore stop.
-      if (closestNode.distance === Infinity) return visitedNodesInOrder;
+      if (closestNode.distance === Infinity) 
+        return { checked: visitedNodesInOrder, path: -1 };
       closestNode.visited = true;
       visitedNodesInOrder.push(closestNode);
       if(closestNode === finishNode)   {

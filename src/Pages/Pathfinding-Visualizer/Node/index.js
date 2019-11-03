@@ -22,13 +22,13 @@ const Node = (props) => {
     isStart ? 'node-start' 
     : isFinish ? 'node-finish' 
     : isWall ? 'node-wall'
-    : ''
+    : 'node-open'
   return (
     <div
       id={`node-${x}-${y}`} 
       className={`node ${extraClassess}`}
       onMouseDown={() => onMouseDown(x, y)}
-      onMouseUp={() => {console.log('UP'); onMouseUp(x, y)}}
+      onMouseUp={() => onMouseUp(x, y)}
       onMouseEnter={() => onMouseEnter(x, y)}
     />
   )

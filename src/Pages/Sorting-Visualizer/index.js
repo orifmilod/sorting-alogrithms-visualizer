@@ -9,7 +9,7 @@ export default function SortingVisualizer() {
     for(let i = 10000; i > 0; i--) {
       numbers.push(i)
     }
-    updateNumbers({ numbers })
+    updateNumbers(numbers)
   }, []);
   function handleMergeSort(){
     const { numbers } = this.state

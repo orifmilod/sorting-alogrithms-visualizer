@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import './Pathfinding-Visualizer.css';
 
 import { ASTAR, DIJKSTRA } from '../../const/Algorithms';
@@ -8,21 +8,25 @@ import Dijkstra  from '../../Algorithms/PathFinding/Dijsktra';
 import { VisualizeAlgorithm } from '../../Actions/algoAction';
 import Node  from './Node';
 import { getInitialGrid, getNewGridWithWallToggled  } from './utils';
+import { message } from 'antd';
+import { Button } from 'antd/lib/radio';
 
 function PathfindingVisualizer({ nodes, algorithm, visualizeState, visualizeAlgorithm }) { 
   const { startNode, finishNode } = nodes;
   const [ mouseIsPressed, updateMousePressed ] = useState(false);
-  const [ grid, updateGrid ] = useState(getInitialGrid(55, 25, startNode, finishNode));
+  const [ grid, updateGrid ] = useState([]);
+
   useEffect(() => {
     updateGrid(getInitialGrid(55, 25, startNode, finishNode))
   }, [startNode, finishNode])
+
   function StartAlgorithm() {
     let checked, path;
     visualizeAlgorithm(false)
     switch (algorithm) {
       case ASTAR: {
         const result = AStar(grid, startNode, finishNode);
-          path = result.path;
+        path = result.path;
         checked = result.checked;
         break;
       }
@@ -39,12 +43,18 @@ function PathfindingVisualizer({ nodes, algorithm, visualizeState, visualizeAlgo
   }
 
   function animateShortestPath(nodesInShortestPathOrder) {
+    if(nodesInShortestPathOrder === -1)
+    {
+      message.error("Sorry, couldn't find the path.")
+      return;
+    }
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
       setTimeout(() => {
         const node = nodesInShortestPathOrder[i];
         document.getElementById(`node-${node.x}-${node.y}`).className = 'node node-shortest-path';
       }, 50 * i);
     }
+    message.success("Horray, found the path.")
   }
   
   function animateGrid(visitedNodesInOrder, nodesInShortestPathOrder) {
@@ -78,8 +88,9 @@ function PathfindingVisualizer({ nodes, algorithm, visualizeState, visualizeAlgo
     updateMousePressed(false);
   }
 
-  if(visualizeState)
-    StartAlgorithm();
+  if(visualizeState) {
+      StartAlgorithm();
+  }
 
   return (
     <div>
@@ -94,6 +105,7 @@ function PathfindingVisualizer({ nodes, algorithm, visualizeState, visualizeAlgo
             )
           })}
       </div>
+      <Button onClick={() => updateGrid(getInitialGrid(55, 25, startNode, finishNode))}>Clean</Button>
      </div>
   )  
 }
