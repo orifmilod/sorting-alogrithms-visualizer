@@ -1,5 +1,5 @@
 {
-  "name": "algo",
+  "name": "Pathfinding visualizer",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
