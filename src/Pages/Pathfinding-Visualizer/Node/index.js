@@ -7,31 +7,30 @@ export function createNode(x, y, isStart, isFinish) {
     y,
     isStart,
     isFinish,
-    distance: Infinity,
-    heuristicDistance: Infinity,
     isWall: false,
     isVisited: false,
     previousNode: null,
+    distance: Infinity,
+    heuristicDistance: Infinity,
   }
 }
 
-const Node = (props) => {
-  const { node, onMouseDown, onMouseUp, onMouseEnter } = props;
+const Node = ({ node, onMouseDown, onMouseUp, onMouseEnter }) => {
   const { x, y, isStart, isFinish, isWall } = node;
-  const extraClassess = 
-    isStart ? 'node-start' 
-    : isFinish ? 'node-finish' 
-    : isWall ? 'node-wall'
-    : 'node-open'
+  const extraClassess =
+    isStart ? 'node-start'
+      : isFinish ? 'node-finish'
+        : isWall ? 'node-wall'
+          : 'node-open'
   return (
     <div
-      id={`node-${x}-${y}`} 
+      id={`node-${x}-${y}`}
       className={`node ${extraClassess}`}
-      onMouseDown={() => onMouseDown(x, y)}
       onMouseUp={() => onMouseUp(x, y)}
+      onMouseDown={() => onMouseDown(x, y)}
       onMouseEnter={() => onMouseEnter(x, y)}
     />
   )
 }
- 
+
 export default Node;

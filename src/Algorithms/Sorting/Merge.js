@@ -1,21 +1,14 @@
 
-function mergeSort(array) {
-  if (array.length === 1) {
-    // Return once we hit an array with a single item
+export default function mergeSort(array) {
+  if (array.length === 1)
     return array
-  }
 
-  // Get the middle item of the array rounded down by creating a variable
-  const middle = Math.floor(array.length / 2)
-  // Create a variable for the items on the left side
-  const left = array.slice(0, middle)
-  // Create a variable for the items on the right side
-  const right = array.slice(middle)
+  const middle = Math.floor(array.length / 2);
 
-  return merge(
-    mergeSort(left),
-    mergeSort(right)
-  )
+  const right = array.slice(middle);
+  const left = array.slice(0, middle);
+
+  return merge(mergeSort(left), mergeSort(right))
 }
 
 // Compare the arrays item by item and return the concatenated result
