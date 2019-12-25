@@ -1,0 +1,33 @@
+/* form starting stylings ------------------------------- */
+.group {
+  position: relative;
+  margin: 10px 10px 10px 0;
+}
+
+input {
+  font-size: 18px;
+  padding: 10px 30px;
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #757575;
+}
+
+
+input:focus {
+  outline: 0;
+  border-bottom: 2px solid rgb(218, 27, 27);
+}
+
+/* .input-label ======================================= */
+.input-label {
+  color: #999;
+  font-size: 18px;
+  font-weight: normal;
+  position: absolute;
+  pointer-events: none;
+  left: 5px;
+  top: 10px;
+  transition: 0.2s ease all;
+  -moz-transition: 0.2s ease all;
+  -webkit-transition: 0.2s ease all;
+}

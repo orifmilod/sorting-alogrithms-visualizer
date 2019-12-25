@@ -1,29 +1,38 @@
-export function MergeSort(arr) {
-  if(arr.length === 1)
-    return arr;
-  
-  const middle = Math.floor(arr.length / 2);
-  let arr2 = [...arr.splice(0, middle)];
-  arr = MergeSort(arr);
-  arr2 = MergeSort(arr2);
-  let result = Merge(arr, arr2)
-  return result
-}
 
-function Merge(arr1, arr2) {
-  //check if start of one is smaller than 2 just return the merged one with concat
-  let tempArr = [];
-  while (arr1.length > 0 && arr2.length > 0) {
-    if(arr1[0] > arr2[0]) 
-      tempArr.push(arr2.shift())
-    else 
-      tempArr.push(arr1.shift())
+function mergeSort(array) {
+  if (array.length === 1) {
+    // Return once we hit an array with a single item
+    return array
   }
-  if(arr1.length > 0)
-   tempArr = tempArr.concat(arr1.slice(0, arr1.length))
-  else if(arr2.length > 0)
-    tempArr = tempArr.concat(arr2.slice(0, arr2.length))
-    
-  return tempArr;
+
+  // Get the middle item of the array rounded down by creating a variable
+  const middle = Math.floor(array.length / 2)
+  // Create a variable for the items on the left side
+  const left = array.slice(0, middle)
+  // Create a variable for the items on the right side
+  const right = array.slice(middle)
+
+  return merge(
+    mergeSort(left),
+    mergeSort(right)
+  )
 }
 
+// Compare the arrays item by item and return the concatenated result
+function merge(left, right) {
+  let result = []
+  let indexLeft = 0
+  let indexRight = 0
+
+  while (indexLeft < left.length && indexRight < right.length) {
+    if (left[indexLeft] < right[indexRight]) {
+      result.push(left[indexLeft])
+      indexLeft++
+    } else {
+      result.push(right[indexRight])
+      indexRight++
+    }
+  }
+
+  return result.concat(left.slice(indexLeft)).concat(right.slice(indexRight))
+}

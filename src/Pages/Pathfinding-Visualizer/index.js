@@ -1,56 +1,60 @@
 import React, { useState, useEffect } from 'react'
-import { connect } from 'react-redux';
-import './Pathfinding-Visualizer.css';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
 
-import { ASTAR, DIJKSTRA } from '../../const/Algorithms';
+import Node from './Node';
+import { Input } from '../../components/common';
+import { Row, Col, Navbar, NavDropdown, Nav } from 'react-bootstrap';
+import * as Algorithms from '../../constants/Algorithms';
 import AStar from '../../Algorithms/PathFinding/A-Star';
 import Dijkstra from '../../Algorithms/PathFinding/Dijsktra';
-import { VisualizeAlgorithm } from '../../Actions/algoAction';
-import Node from './Node';
 import { getInitialGrid, getNewGridWithWallToggled } from './utils';
-import { message, notification } from 'antd';
-import { Button } from 'antd/lib/radio';
 
-function PathfindingVisualizer({ nodes, algorithm, visualizeState, visualizeAlgorithm }) {
-  const { startNode, finishNode } = nodes;
-  const [mouseIsPressed, updateMousePressed] = useState(false);
+import './Pathfinding-Visualizer.css';
+
+const PageContainer = styled.div`
+  text-align: center;
+  width: 100vw;
+`;
+
+
+export default function PathfindingVisualizer() {
   const [grid, updateGrid] = useState([]);
+  const [isVisualizing, setIsVisualizing] = useState(false);
+  const [startNodeX, setStartNodeX] = useState(0);
+  const [startNodeY, setStartNodeY] = useState(0);
+
+  const [finishNodeX, setFinishNodeX] = useState(10);
+  const [finishNodeY, setFinishNodeY] = useState(10);
+
+  const [mouseIsPressed, updateMousePressed] = useState(false);
+  const [selectedAlgorithm, setSelectedAlgorithm] = useState('');
 
   useEffect(() => {
-    updateGrid(getInitialGrid(55, 25, startNode, finishNode))
-    const notificationMessage = {
-      message: 'Create obstacles',
-      description: 'You can create obstacles on clicking the grid and make the algorithm work harder :)',
-      duration: 10,
-    };
-    notification.info(notificationMessage)
-  }, [startNode, finishNode])
+    const startNode = { x: startNodeX, y: startNodeY }
+    const finishNode = { x: finishNodeX, y: finishNodeY }
+    updateGrid(getInitialGrid(55, 25, startNode, finishNode));
+  }, [finishNodeX, finishNodeY, startNodeX, startNodeY])
 
-  function StartAlgorithm() {
-    let checked, path;
-    visualizeAlgorithm(false)
-    switch (algorithm) {
-      case ASTAR: {
-        const result = AStar(grid, startNode, finishNode);
-        path = result.path;
-        checked = result.checked;
-        break;
-      }
-      case DIJKSTRA: {
-        const result = Dijkstra(grid, startNode, finishNode);
-        path = result.path;
-        checked = result.checked;
-        break;
-      }
-      default:
-        break;
+  function startAlgorithm(algorithm) {
+    if (!algorithm.trim()) {
+      toast.error('Please select an algorithm!');
+      return;
     }
-    animateGrid(checked, path);
+    const startNode = { x: startNodeX, y: startNodeY };
+    const finishNode = { x: finishNodeX, y: finishNodeY };
+
+    const options = {
+      [Algorithms.ASTAR]: AStar(grid, startNode, finishNode),
+      [Algorithms.DIJKSTRA]: Dijkstra(grid, startNode, finishNode),
+    }
+    const result = options[algorithm];
+    animateGrid(result.checked, result.path);
   }
 
   function animateShortestPath(nodesInShortestPathOrder) {
     if (nodesInShortestPathOrder === -1) {
-      message.error("Sorry, couldn't find the path.")
+      toast.error("Sorry, couldn't find the path.")
       return;
     }
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
@@ -59,13 +63,8 @@ function PathfindingVisualizer({ nodes, algorithm, visualizeState, visualizeAlgo
         document.getElementById(`node-${node.x}-${node.y}`).className = 'node node-shortest-path';
       }, 50 * i);
     }
-    message.success("Horray, found the path.");
-    const notificationMessage = {
-      message: 'Notification Title',
-      description: 'Please refresh the page to visualize algorithm again, we haven not set up Clear button in website yet, work in progress!',
-      duration: 0,
-    };
-    notification.warn(notificationMessage);
+    toast.success("Horray, found the path.");
+    toast.warn('Please refresh the page to visualize algorithm again, we haven not set up Clear button in website yet, work in progress!');
   }
 
   function animateGrid(visitedNodesInOrder, nodesInShortestPathOrder) {
@@ -99,39 +98,93 @@ function PathfindingVisualizer({ nodes, algorithm, visualizeState, visualizeAlgo
     updateMousePressed(false);
   }
 
-  if (visualizeState) {
-    StartAlgorithm();
+  function startVisualization() {
+    setIsVisualizing(true);
+    startAlgorithm(selectedAlgorithm);
   }
 
   return (
-    <div>
+    <PageContainer>
+      <Navbar bg="light" expand="lg">
+        <Navbar.Brand>Pathfindin visualizer</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="mr-auto">
+            <Nav.Link className='text-info' onClick={startVisualization}> Start visualization </Nav.Link>
+
+            <NavDropdown title="Algorithms" id="basic-nav-dropdown">
+              <NavDropdown.Item href='' active={selectedAlgorithm === Algorithms.ASTAR} onClick={() => setSelectedAlgorithm(Algorithms.ASTAR)}>
+                A Start
+              </NavDropdown.Item>
+              <NavDropdown.Item href='' active={selectedAlgorithm === Algorithms.DIJKSTRA} onClick={() => setSelectedAlgorithm(Algorithms.DIJKSTRA)}>
+                Dijkstra
+              </NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+
+        </Navbar.Collapse>
+      </Navbar>
+      {/* <Header>
+        <p>Pathfinding visualizer</p>
+
+        <Button onClick={startVisualization} className='m-1'>Visualize</Button>
+      </Header> */}
+      <Col className='d-flex justify-content-center'>
+
+        <Col xs={5} xl={2}>
+          <Row> Start Point </Row>
+          <Row className='flex-nowrap'>
+            <Input
+              min={0}
+              label='X='
+              type='number'
+              value={startNodeX}
+              onChange={e => setStartNodeX(e.target.value ? parseInt(e.target.value) : startNodeX)}
+            />
+            <Input
+              label='Y='
+              type='number'
+              value={startNodeY}
+              onChange={e => setStartNodeY(e.target.value >= 0 ? parseInt(e.target.value) : startNodeY)}
+            />
+          </Row>
+        </Col>
+        <Col xs={5} xl={2}>
+          <Row>Finish point</Row>
+          <Row className='flex-nowrap'>
+            <Input
+              min={0}
+              label='X='
+              type='number'
+              value={finishNodeX}
+              onChange={e => setFinishNodeX(e.target.value ? parseInt(e.target.value) : finishNodeX)}
+            />
+            <Input
+              label='Y='
+              type='number'
+              value={finishNodeY}
+              onChange={e => setFinishNodeY(e.target.value >= 0 ? parseInt(e.target.value) : finishNodeY)}
+            />
+          </Row>
+        </Col>
+      </Col>
       <div className='grid'>
-        {grid.map((row, indexRow) => {
-          return (
+        {
+          grid.map((row, indexRow) =>
             <div className='column' key={indexRow}>
-              {row.map((node, nodeIndex) => (
-                <Node key={nodeIndex} node={node} onMouseUp={handleMouseUp} onMouseDown={handleMouseDown} onMouseEnter={handleMouseEnter} />
-              ))}
+              {row.map((node, nodeIndex) =>
+                <Node
+                  node={node}
+                  key={nodeIndex}
+                  onMouseUp={handleMouseUp}
+                  onMouseDown={handleMouseDown}
+                  onMouseEnter={handleMouseEnter}
+                />
+              )}
             </div>
-          )
-        })}
+          )}
       </div>
-      <Button onClick={() => updateGrid(getInitialGrid(55, 25, startNode, finishNode))}>Clean</Button>
-    </div>
+      {/* <Button onClick={() => updateGrid(getInitialGrid(55, 25, startNode, finishNode))}> Clean </Button> */}
+    </PageContainer>
   )
 }
-
-const mapStateToProps = (state) => {
-  return {
-    nodes: state.nodes,
-    visualizeState: state.algorithm.visualizeState,
-    algorithm: state.algorithm.algorithm
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    visualizeAlgorithm: visualizeState => dispatch(VisualizeAlgorithm(visualizeState))
-  }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(PathfindingVisualizer);

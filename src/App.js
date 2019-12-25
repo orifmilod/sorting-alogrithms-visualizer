@@ -1,16 +1,14 @@
 import React from 'react';
 import PathfindingVisualizer from './Pages/Pathfinding-Visualizer';
-import Navbar from './components/Navbar';
-import 'antd/dist/antd.css';
-import { Provider } from 'react-redux';
-import store from './Store';
-
+import { toast } from 'react-toastify';
+import 'bootstrap/dist/css/bootstrap.min.css';
 export default function App() {
+  toast.configure();
+
   return (
-    <Provider store={store}>
-      <Navbar/>
-      <PathfindingVisualizer/>
-    </Provider>
+    <div>
+      <PathfindingVisualizer />
+    </div>
   )
 }
 
