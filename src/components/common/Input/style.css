@@ -8,6 +8,7 @@ input {
   font-size: 18px;
   padding: 10px 30px;
   width: 100%;
+  text-align: right;
   border: none;
   border-bottom: 2px solid #757575;
 }

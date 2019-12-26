@@ -6,20 +6,20 @@
   border: 1px #afd8f8 solid;
 }
 
-.node-start {
+.start {
   background: lightgreen;
 }
 
-.node-finish {
+.finish {
   background: red;
 }
 
-.node-wall {
+.wall {
   background: #0c3547;
   border: 1px #0c3547 solid;
 }
 
-.node-open {
+.open {
   background: white;
 }
 
@@ -57,7 +57,7 @@
   }
 }
 
-.node-visited {
+.visited {
   -webkit-animation-name: visitedAnimation;
   animation-name: visitedAnimation;
   -webkit-animation-duration: 1.5s;
@@ -126,7 +126,7 @@
   }
 }
 
-.node-shortest-path {
+.shortest-path {
   -webkit-animation-name: shortestPath;
   animation-name: shortestPath;
   -webkit-animation-duration: 1.5s;

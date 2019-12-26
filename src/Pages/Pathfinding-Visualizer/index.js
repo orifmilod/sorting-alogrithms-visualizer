@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
-import Node from './Node';
+import Node, { createNode, getNodeClass, getNodeID } from './Node';
 import { Input } from '../../components/common';
 import { Row, Col, Navbar, NavDropdown, Nav } from 'react-bootstrap';
 
-import * as Algorithms from '../../constants/pathFinding';
+import * as nodeStates from '../../constants/nodeState';
 import aStar from '../../Algorithms/PathFinding/A-Star';
+import * as Algorithms from '../../constants/pathFinding';
 import dijkstra from '../../Algorithms/PathFinding/Dijsktra';
 import { getInitialGrid, getNewGridWithWallToggled } from './utils';
 
@@ -33,32 +34,29 @@ const Column = styled.div`
   grid-auto-flow: column;
 `
 
+
 export default function PathfindingVisualizer() {
   const [grid, updateGrid] = useState([]);
   const [isVisualizing, setIsVisualizing] = useState(false);
-  const [startNodeX, setStartNodeX] = useState(0);
-  const [startNodeY, setStartNodeY] = useState(0);
-
-  const [finishNodeX, setFinishNodeX] = useState(10);
-  const [finishNodeY, setFinishNodeY] = useState(10);
-
   const [mouseIsPressed, updateMousePressed] = useState(false);
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('');
+  const [startNode, setStartNode] = useState(createNode(0, 0, nodeStates.Default))
+  const [finishNode, setFinishNode] = useState(createNode(10, 10, nodeStates.Default))
 
   useEffect(() => {
-    const startNode = { x: startNodeX, y: startNodeY }
-    const finishNode = { x: finishNodeX, y: finishNodeY }
     updateGrid(getInitialGrid(55, 25, startNode, finishNode));
-  }, [finishNodeX, finishNodeY, startNodeX, startNodeY])
+  }, [finishNode, startNode])
+
+  function startVisualization() {
+    setIsVisualizing(true);
+    startAlgorithm(selectedAlgorithm);
+  }
 
   function startAlgorithm(algorithm) {
     if (!algorithm.trim()) {
       toast.error('Please select an algorithm!');
       return;
     }
-    const startNode = { x: startNodeX, y: startNodeY };
-    const finishNode = { x: finishNodeX, y: finishNodeY };
-
     const options = {
       [Algorithms.Astar]: aStar(grid, startNode, finishNode),
       [Algorithms.Dijkstra]: dijkstra(grid, startNode, finishNode),
@@ -75,7 +73,7 @@ export default function PathfindingVisualizer() {
     for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
       setTimeout(() => {
         const node = nodesInShortestPathOrder[i];
-        document.getElementById(`node-${node.x}-${node.y}`).className = 'node node-shortest-path';
+        document.getElementById(getNodeID(node.x, node.y)).className = getNodeClass(nodeStates.ShortestPath);
       }, 50 * i);
     }
     toast.success("Horray, found the path.");
@@ -94,10 +92,9 @@ export default function PathfindingVisualizer() {
       }
       setTimeout(() => {
         const node = visitedNodesInOrder[i];
-        document.getElementById(`node-${node.x}-${node.y}`).className = 'node node-visited';
+        document.getElementById(getNodeID(node.x, node.y)).className = getNodeClass(nodeStates.Visited);
       }, 10 * i);
     }
-
   }
 
   function handleMouseDown(x, y) {
@@ -121,19 +118,11 @@ export default function PathfindingVisualizer() {
     updateMousePressed(false);
   }
 
-  function startVisualization() {
-    setIsVisualizing(true);
-    startAlgorithm(selectedAlgorithm);
-  }
-
   function resetGrid() {
     if (isVisualizing)
       return;
-
-    setStartNodeX(0);
-    setStartNodeY(0);
-    setFinishNodeX(10);
-    setFinishNodeY(10);
+    // const grid = getInitialGrid(55, 25, startNode, finishNode)
+    // updateGrid(grid);
   }
 
   return (
@@ -145,10 +134,10 @@ export default function PathfindingVisualizer() {
           <Nav className="mr-auto">
             <Nav.Link className='text-info' onClick={startVisualization}> Start visualization </Nav.Link>
             <NavDropdown title="Algorithms" id="basic-nav-dropdown">
-              <NavDropdown.Item href='' active={selectedAlgorithm === Algorithms.Astar} onClick={() => setSelectedAlgorithm(Algorithms.Astar)}>
+              <NavDropdown.Item active={selectedAlgorithm === Algorithms.Astar} onClick={() => setSelectedAlgorithm(Algorithms.Astar)}>
                 A Start
               </NavDropdown.Item>
-              <NavDropdown.Item href='' active={selectedAlgorithm === Algorithms.Dijkstra} onClick={() => setSelectedAlgorithm(Algorithms.Dijkstra)}>
+              <NavDropdown.Item active={selectedAlgorithm === Algorithms.Dijkstra} onClick={() => setSelectedAlgorithm(Algorithms.Dijkstra)}>
                 Dijkstra
               </NavDropdown.Item>
             </NavDropdown>
@@ -165,14 +154,22 @@ export default function PathfindingVisualizer() {
               min={0}
               label='X='
               type='number'
-              value={startNodeX}
-              onChange={e => setStartNodeX(e.target.value ? parseInt(e.target.value) : startNodeX)}
+              value={startNode.x}
+              onChange={e =>
+                setStartNode(e.target.value ?
+                  { ...startNode, x: parseInt(e.target.value) }
+                  : startNode)
+              }
             />
             <Input
               label='Y='
               type='number'
-              value={startNodeY}
-              onChange={e => setStartNodeY(e.target.value >= 0 ? parseInt(e.target.value) : startNodeY)}
+              value={startNode.y}
+              onChange={e =>
+                setStartNode(e.target.value ?
+                  { ...startNode, y: parseInt(e.target.value) }
+                  : startNode)
+              }
             />
           </Row>
         </Col>
@@ -183,15 +180,23 @@ export default function PathfindingVisualizer() {
               min={0}
               label='X='
               type='number'
-              value={finishNodeX}
-              onChange={e => setFinishNodeX(e.target.value ? parseInt(e.target.value) : finishNodeX)}
+              value={finishNode.x}
+              onChange={e =>
+                setFinishNode(e.target.value ?
+                  { ...finishNode, x: parseInt(e.target.value) }
+                  : finishNode)
+              }
             />
             <Input
               min={0}
               label='Y='
               type='number'
-              value={finishNodeY}
-              onChange={e => setFinishNodeY(e.target.value >= 0 ? parseInt(e.target.value) : finishNodeY)}
+              value={finishNode.y}
+              onChange={e =>
+                setFinishNode(e.target.value ?
+                  { ...finishNode, y: parseInt(e.target.value) }
+                  : finishNode)
+              }
             />
           </Row>
         </Col>

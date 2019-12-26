@@ -1,0 +1,19 @@
+.item {
+  margin: 0 2px;
+}
+
+.sorted {
+  background: greenyellow;
+}
+
+.default {
+  background: rgb(56, 56, 239);
+}
+
+.swapping {
+  background: red;
+}
+
+.comparing {
+  background: lightblue;
+}

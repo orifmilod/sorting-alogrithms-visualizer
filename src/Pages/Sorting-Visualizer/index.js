@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
+import { Navbar, NavDropdown, Nav, Row } from 'react-bootstrap';
 
-import Item, { createItem } from './Item';
+import Item, { createItem, getItemClass } from './Item';
 
 import * as Algorithms from '../../constants/sorting';
 import minimumValue from '../../constants/itemMinimum';
 import * as itemStates from '../../constants/itemState';
 import mergeSort from '../../Algorithms/Sorting/Merge';
 import bubbleSort from '../../Algorithms/Sorting/Bubble';
+import { Input } from '../../components/common';
 
 const Container = styled.div`
   width: 100vw;
@@ -29,6 +30,7 @@ const Grid = styled.div`
 export default function SortingVisualizer() {
   const [numbers, setNumbers] = useState([]);
   const [isSorting, setIsSorting] = useState(false);
+  const [speed, setSpeed] = useState(1);
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('');
 
   useEffect(() => {
@@ -37,7 +39,7 @@ export default function SortingVisualizer() {
 
   function updateNumbers() {
     let numbers = [];
-    for (let i = 10; i >= 0; i--) {
+    for (let i = 150; i >= 0; i--) {
       numbers.push(createItem(i, i + minimumValue, itemStates.Default));
     }
     setNumbers(numbers);
@@ -58,21 +60,27 @@ export default function SortingVisualizer() {
       [Algorithms.Merge]: mergeSort(numbers),
     }
     const { sorted, history } = options[algorithm];
-    // console.log(history)
     animateGrid(history);
   }
 
   function animateGrid(historyOfComparisions) {
-    console.log(historyOfComparisions);
-    for (let i = 1; i < historyOfComparisions.length; i++) {
+    for (let i = 0; i < historyOfComparisions.length - 1; i++) {
       setTimeout(() => {
         const currentNode = historyOfComparisions[i];
-        const comparingNode = historyOfComparisions[i - 1];
+        const comparingNode = historyOfComparisions[i + 1];
         const nodeElem = document.getElementById(`bar-${currentNode.index}`)
         const comparingElem = document.getElementById(`bar-${comparingNode.index}`);
-        console.log(currentNode.index, comparingNode.index);
-        console.log(nodeElem, comparingElem)
-      }, 10)
+        const classname = getItemClass(currentNode.state);
+        nodeElem.className = classname;
+        comparingElem.className = classname;
+        comparingElem.style.height = `${comparingElem.value}px`;
+        nodeElem.style.height = `${currentNode.value}px`;
+        if (i === historyOfComparisions.length - 2) {
+          toast.success('Horray sorted all out');
+          toast.warn('Please refresh the page to reset!', { autoClose: false })
+        }
+      }, i / speed)
+
     }
   }
 
@@ -87,10 +95,10 @@ export default function SortingVisualizer() {
             <Nav.Link className='text-info' onClick={startSorting}> Start sorting </Nav.Link>
 
             <NavDropdown title="Algorithms" id="basic-nav-dropdown">
-              <NavDropdown.Item href='' active={selectedAlgorithm === Algorithms.Bubble} onClick={() => setSelectedAlgorithm(Algorithms.Bubble)}>
+              <NavDropdown.Item active={selectedAlgorithm === Algorithms.Bubble} onClick={() => setSelectedAlgorithm(Algorithms.Bubble)}>
                 Bubble Sort
               </NavDropdown.Item>
-              <NavDropdown.Item href='' active={selectedAlgorithm === Algorithms.Merge} onClick={() => setSelectedAlgorithm(Algorithms.Merge)}>
+              <NavDropdown.Item active={selectedAlgorithm === Algorithms.Merge} onClick={() => setSelectedAlgorithm(Algorithms.Merge)}>
                 Merge Sort
               </NavDropdown.Item>
             </NavDropdown>
@@ -99,7 +107,16 @@ export default function SortingVisualizer() {
 
         </Navbar.Collapse>
       </Navbar>
-
+      <Row className='justify-content-center'>
+        <Input
+          label='speed'
+          value={speed}
+          type='number'
+          onChange={e =>
+            setSpeed(e.target.value ? e.target.value : speed)
+          }
+        />
+      </Row>
       <Grid>
         {
           numbers.map((bar, index) =>

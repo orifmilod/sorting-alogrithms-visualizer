@@ -1,6 +1,7 @@
 import React from 'react';
 import * as itemStates from '../../../constants/itemState';
-import styled, { css } from 'styled-components';
+
+import './item.css';
 
 export const createItem = (index, value, state) => {
   return {
@@ -9,21 +10,20 @@ export const createItem = (index, value, state) => {
     value,
   }
 }
-const stateClass = {
-  [itemStates.Sorted]: 'green',
-  [itemStates.Default]: 'Blue',
-  [itemStates.Swapping]: 'yellow',
-  [itemStates.Comparing]: 'lightblue',
+
+export function getItemClass(state) {
+  const stateClass = {
+    [itemStates.Sorted]: 'sorted',
+    [itemStates.Default]: 'default',
+    [itemStates.Swapping]: 'swapping',
+    [itemStates.Comparing]: 'comparing',
+  }
+  return `item ${stateClass[state]}`;
 }
 
-const Item = styled.div`
-  margin: 0 2px;
-  width: ${props => props.width};
-  height: ${props => props.height};
-  background: ${props => stateClass[props.state]}
-`
 
-export default ({ state, height, width, id }) => {
-  console.log(id)
-  return <Item key={id} height={height} width={width} state={state} />
-}
+export default ({ state, height, width, id }) =>
+  <div
+    id={id}
+    className={getItemClass(state)}
+    style={{ height: height, width: width }} />
