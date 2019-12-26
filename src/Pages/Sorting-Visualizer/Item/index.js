@@ -10,10 +10,10 @@ export const createItem = (index, value, state) => {
   }
 }
 const stateClass = {
-  [itemStates.Comparing]: 'lightblue',
-  [itemStates.Default]: 'Blue',
   [itemStates.Sorted]: 'green',
+  [itemStates.Default]: 'Blue',
   [itemStates.Swapping]: 'yellow',
+  [itemStates.Comparing]: 'lightblue',
 }
 
 const Item = styled.div`
