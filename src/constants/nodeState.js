@@ -1,5 +1,5 @@
 export const End = 'End';
-export const Wall = 'Path';
+export const Wall = 'Wall';
 export const Start = 'Start';
 export const Default = 'Default';
 export const Visited = 'Visited';

@@ -1,41 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';
-import styled from 'styled-components';
 
-import Node, { createNode, getNodeClass, getNodeID } from './Node';
 import { Input } from '../../components/common';
+import { Column, Grid, PageContainer } from './styled';
+import Node, { createNode, getNodeClass, getNodeID } from './Node';
 import { Row, Col, Navbar, NavDropdown, Nav } from 'react-bootstrap';
 
 import * as nodeStates from '../../constants/nodeState';
 import aStar from '../../Algorithms/PathFinding/A-Star';
 import * as Algorithms from '../../constants/pathFinding';
 import dijkstra from '../../Algorithms/PathFinding/Dijsktra';
-import { getInitialGrid, getNewGridWithWallToggled } from './utils';
 
-const PageContainer = styled.div`
-  text-align: center;
-  width: 100vw;
-`;
+import { getInitialGrid, updateNode } from './utils';
 
-const Grid = styled.div`
-  margin: auto;
-  width: fit-content;
-  height: fit-content;
-
-  display: grid;
-  grid-row-gap: 0;
-  grid-auto-flow: row;
-  vertical-align: middle;
-`
-
-const Column = styled.div`
-  display: grid;
-  grid-column-gap: 0;
-  grid-auto-flow: column;
-`
-
-
-export default function PathfindingVisualizer() {
+export default function PathfindingVisualizer({ onChangePage }) {
   const [grid, updateGrid] = useState([]);
   const [isVisualizing, setIsVisualizing] = useState(false);
   const [mouseIsPressed, updateMousePressed] = useState(false);
@@ -100,15 +78,24 @@ export default function PathfindingVisualizer() {
   function handleMouseDown(x, y) {
     if (isVisualizing)
       return;
-    const newGrid = getNewGridWithWallToggled(grid, x, y);
+    //Update node state, if Default change it to Wall, and vice versa
+    const newNode = toggleWall(x, y);
+    const newGrid = updateNode(grid, newNode);
     updateGrid(newGrid);
     updateMousePressed(true);
+  }
+
+  function toggleWall(x, y) {
+    const updatedState = grid[y][x].state === nodeStates.Default ?
+      nodeStates.Wall : nodeStates.Default;
+    return createNode(x, y, updatedState);
   }
 
   function handleMouseEnter(x, y) {
     if (!mouseIsPressed || isVisualizing)
       return;
-    const newGrid = getNewGridWithWallToggled(grid, x, y);
+    const newNode = toggleWall(x, y)
+    const newGrid = updateNode(grid, newNode);
     updateGrid(newGrid);
   }
 
@@ -128,12 +115,15 @@ export default function PathfindingVisualizer() {
   return (
     <PageContainer>
       <Navbar bg="light" expand="lg">
-        <Navbar.Brand>Pathfinding visualizer</Navbar.Brand>
+        <Navbar.Brand>
+          Pathfinding visualizer
+        </Navbar.Brand>
+
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             <Nav.Link className='text-info' onClick={startVisualization}> Start visualization </Nav.Link>
-            <NavDropdown title="Algorithms" id="basic-nav-dropdown">
+            <NavDropdown title="Algorithms">
               <NavDropdown.Item active={selectedAlgorithm === Algorithms.Astar} onClick={() => setSelectedAlgorithm(Algorithms.Astar)}>
                 A Start
               </NavDropdown.Item>
@@ -141,7 +131,8 @@ export default function PathfindingVisualizer() {
                 Dijkstra
               </NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link className='text-info' onClick={resetGrid}> Reset  </Nav.Link>
+            {/* <Nav.Link className='text-info' onClick={resetGrid}> Reset  </Nav.Link> */}
+            <Nav.Link onClick={onChangePage}> Sorting Visualizer  </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
@@ -156,9 +147,10 @@ export default function PathfindingVisualizer() {
               type='number'
               value={startNode.x}
               onChange={e =>
-                setStartNode(e.target.value ?
-                  { ...startNode, x: parseInt(e.target.value) }
-                  : startNode)
+                setStartNode(e.target.value
+                  ? { ...startNode, x: parseInt(e.target.value) }
+                  : startNode
+                )
               }
             />
             <Input
@@ -166,9 +158,10 @@ export default function PathfindingVisualizer() {
               type='number'
               value={startNode.y}
               onChange={e =>
-                setStartNode(e.target.value ?
-                  { ...startNode, y: parseInt(e.target.value) }
-                  : startNode)
+                setStartNode(e.target.value
+                  ? { ...startNode, y: parseInt(e.target.value) }
+                  : startNode
+                )
               }
             />
           </Row>
@@ -182,9 +175,10 @@ export default function PathfindingVisualizer() {
               type='number'
               value={finishNode.x}
               onChange={e =>
-                setFinishNode(e.target.value ?
-                  { ...finishNode, x: parseInt(e.target.value) }
-                  : finishNode)
+                setFinishNode(e.target.value
+                  ? { ...finishNode, x: parseInt(e.target.value) }
+                  : finishNode
+                )
               }
             />
             <Input
@@ -193,9 +187,10 @@ export default function PathfindingVisualizer() {
               type='number'
               value={finishNode.y}
               onChange={e =>
-                setFinishNode(e.target.value ?
-                  { ...finishNode, y: parseInt(e.target.value) }
-                  : finishNode)
+                setFinishNode(e.target.value
+                  ? { ...finishNode, y: parseInt(e.target.value) }
+                  : finishNode
+                )
               }
             />
           </Row>
@@ -218,6 +213,6 @@ export default function PathfindingVisualizer() {
         )}
       </Grid>
 
-    </PageContainer>
+    </PageContainer >
   )
 }

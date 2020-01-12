@@ -18,13 +18,9 @@ export function getInitialGrid(x, y, startNode, finishNode) {
   return nodes;
 }
 
-export function getNewGridWithWallToggled(nodes, x, y) {
+
+export function updateNode(nodes, updateNode) {
   const newGrid = nodes.slice();
-  const node = newGrid[y][x];
-  const newNode = {
-    ...node,
-    isWall: !node.isWall,
-  };
-  newGrid[y][x] = newNode;
+  newGrid[updateNode.y][updateNode.x] = updateNode;
   return newGrid;
 };

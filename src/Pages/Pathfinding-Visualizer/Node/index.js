@@ -29,6 +29,7 @@ export function getNodeID(x, y) {
   return `node-${x}-${y}`
 }
 
+
 export default ({ node, onMouseDown, onMouseUp, onMouseEnter }) => {
   const { x, y, state } = node;
   return (

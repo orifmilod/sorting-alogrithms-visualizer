@@ -1,8 +1,9 @@
 import { getAllNodes } from '../Utils';
-
+import { Wall } from '../../constants/nodeState';
 function heuristic(a, b) {
   return Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
 }
+
 function addNeighbours(nodes) {
   let row = nodes[0].length;
   let column = nodes.length;
@@ -64,6 +65,7 @@ function calculateDistance(currentNode, neighbour) {
 
 export default function AStar(nodes, startNode, finishNode)
 {
+  console.log(nodes)
   //TODO: Catch edge cases.
   if(startNode.x === finishNode.x && startNode.y === finishNode.y)
     return -1
@@ -97,7 +99,7 @@ export default function AStar(nodes, startNode, finishNode)
   
     for (let i = 0; i < neighbours.length; i++) {
       const neighbour = neighbours[i];
-      if(!neighbour.isWall && !checked.includes(neighbour)) {
+      if(neighbour.state !== Wall && !checked.includes(neighbour)) {
         let distance = calculateDistance(currentNode, neighbour);
         distance += currentNode.distance;
 

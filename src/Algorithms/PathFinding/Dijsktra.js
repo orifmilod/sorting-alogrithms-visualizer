@@ -5,6 +5,7 @@
   by backtracking from the finish node.
 */
 import { getAllNodes } from '../Utils';
+import { Wall } from '../.././constants/nodeState';
 export default function Dijkstra(nodes, start, finish) {
     if(!start || !finish || start === finish)
       return -1;
@@ -18,7 +19,7 @@ export default function Dijkstra(nodes, start, finish) {
       SortNodesByDistance(unvisitedNodes);
       const closestNode = unvisitedNodes.shift();
       // If we encounter a wall, we skip it.
-      if (closestNode.isWall) continue;
+      if (closestNode.state === Wall) continue;
       // If the closest node is at a distance of infinity,
       // we must be trapped and should therefore stop.
       if (closestNode.distance === Infinity) 

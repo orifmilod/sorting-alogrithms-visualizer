@@ -27,7 +27,7 @@ const Grid = styled.div`
 `;
 
 
-export default function SortingVisualizer() {
+export default function SortingVisualizer({ onChangePage }) {
   const [numbers, setNumbers] = useState([]);
   const [isSorting, setIsSorting] = useState(false);
   const [speed, setSpeed] = useState(1);
@@ -73,8 +73,8 @@ export default function SortingVisualizer() {
         const classname = getItemClass(currentNode.state);
         nodeElem.className = classname;
         comparingElem.className = classname;
-        comparingElem.style.height = `${comparingElem.value}px`;
-        nodeElem.style.height = `${currentNode.value}px`;
+        comparingElem.style.height = `${comparingElem.value * 2}px`;
+        nodeElem.style.height = `${currentNode.value * 2}px`;
         if (i === historyOfComparisions.length - 2) {
           toast.success('Horray sorted all out');
           toast.warn('Please refresh the page to reset!', { autoClose: false })
@@ -92,7 +92,7 @@ export default function SortingVisualizer() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link className='text-info' onClick={startSorting}> Start sorting </Nav.Link>
+            <Nav.Link className='text-info' onClick={startSorting}>  Start visualization  </Nav.Link>
 
             <NavDropdown title="Algorithms" id="basic-nav-dropdown">
               <NavDropdown.Item active={selectedAlgorithm === Algorithms.Bubble} onClick={() => setSelectedAlgorithm(Algorithms.Bubble)}>
@@ -102,7 +102,8 @@ export default function SortingVisualizer() {
                 Merge Sort
               </NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link className='text-info' onClick={updateNumbers}> Reset  </Nav.Link>
+            {/* <Nav.Link className='text-info' onClick={updateNumbers}> Reset  </Nav.Link> */}
+            <Nav.Link onClick={onChangePage}> Pathfinding Visualizer  </Nav.Link>
           </Nav>
 
         </Navbar.Collapse>
@@ -112,9 +113,7 @@ export default function SortingVisualizer() {
           label='speed'
           value={speed}
           type='number'
-          onChange={e =>
-            setSpeed(e.target.value ? e.target.value : speed)
-          }
+          onChange={e => setSpeed(e.target.value ? e.target.value : speed)}
         />
       </Row>
       <Grid>
@@ -123,7 +122,7 @@ export default function SortingVisualizer() {
             <Item
               state={bar.state}
               id={`bar-${index}`}
-              height={`${bar.value}px`}
+              height={`${bar.value * 2}px`}
               width={`${(window.innerWidth - 100) / numbers.length / 2}px`}
             />)
         }
