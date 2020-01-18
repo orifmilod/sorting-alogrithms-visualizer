@@ -21,9 +21,11 @@ export function bubblesSort(unsortedArray) {
         sorted = false;
         history.push(createItem(i, arr[i].value + minimumValue, itemStates.Swapping));
         history.push(createItem(i + 1, arr[i + 1].value + minimumValue, itemStates.Swapping));
+        history.push(createItem(i, arr[i].value + minimumValue, itemStates.Sorted));
+        history.push(createItem(i + 1, arr[i + 1].value + minimumValue, itemStates.Sorted));
       }
-      history.push(createItem(i, arr[i].value + minimumValue, itemStates.Sorted));
-      history.push(createItem(i + 1, arr[i + 1].value + minimumValue, itemStates.Sorted));
+      history.push(createItem(i, arr[i].value + minimumValue, itemStates.Default));
+      history.push(createItem(i + 1, arr[i + 1].value + minimumValue, itemStates.Default));
     }
 
     if (sorted)
@@ -38,10 +40,10 @@ export default function bubbleSort(unsortedArr) {
   do {
     swapped = false;
     for (var i = 0; i < arr.length - 1; i++) {
+      history.push(createItem(i, arr[i].value + minimumValue, itemStates.Comparing));
+      history.push(createItem(i + 1, arr[i + 1].value + minimumValue, itemStates.Comparing));
+      
       if (arr[i].value > arr[i + 1].value) {
-        history.push(createItem(i, arr[i].value + minimumValue, itemStates.Comparing));
-        history.push(createItem(i + 1, arr[i + 1].value + minimumValue, itemStates.Comparing));
-
         arr[i].value = arr[i].value + arr[i + 1].value;
         arr[i + 1].value = arr[i].value - arr[i + 1].value
         arr[i].value = arr[i].value - arr[i + 1].value
@@ -49,14 +51,14 @@ export default function bubbleSort(unsortedArr) {
 
         history.push(createItem(i, arr[i].value + minimumValue, itemStates.Swapping));
         history.push(createItem(i + 1, arr[i + 1].value + minimumValue, itemStates.Swapping));
-
-        history.push(createItem(i, arr[i].value + minimumValue, itemStates.Default));
-        history.push(createItem(i + 1, arr[i + 1].value + minimumValue, itemStates.Default));
       }
       else {
         history.push(createItem(i, arr[i].value + minimumValue, itemStates.Sorted));
         history.push(createItem(i + 1, arr[i + 1].value + minimumValue, itemStates.Sorted));
       }
+
+      history.push(createItem(i, arr[i].value + minimumValue, itemStates.Default));
+      history.push(createItem(i + 1, arr[i + 1].value + minimumValue, itemStates.Default));
     }
   } while (swapped);
   return { sorted: arr, history };
