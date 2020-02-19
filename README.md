@@ -6,11 +6,19 @@ Welcome to Pathfinding Visualizer! I built this application because I was fascin
 
 <h2>Meet the Algorithms</h2>
 <ul>
+   <h3> Path-finding </h3> 
    <li>
     <b> Dijkstra's Algorithm </b>: A naive way of searching for end node and the father of pathfinding algorithms, guarantees       the shortest path.
   </li>
   <li> 
     <b>A* Search</b> : arguably the best pathfinding algorithm; uses heuristics to guarantee the shortest path much faster       than Dijkstra's Algorithm 
   </li>
-  <small>More Comming soon! (You can make suggestions as well :) )</small>
+   <h3> Sorting </h3>
+      <li> 
+         <b>Bubble</b> Insertion sort is a simple sorting algorithm that builds the final sorted array one item at a time.
+      </li>
+      <li> 
+         <b>Insertion</b> 
+      </li>
+<small>More Comming soon! (You can make suggestions as well :) )</small>
 </ul>
