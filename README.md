@@ -15,10 +15,10 @@ Welcome to Pathfinding Visualizer! I built this application because I was fascin
   </li>
    <h3> Sorting </h3>
       <li> 
-         <b>Bubble</b> Bubble Sort is the simplest sorting algorithm that works by repeatedly swapping the adjacent elements if they are in wrong order.
+         <b>Bubble</b> ssort is the simplest sorting algorithm that works by repeatedly swapping the adjacent elements if they are in wrong order.
       </li>
       <li> 
-         <b>Insertion</b> Insertion sort is a simple sorting algorithm that builds the final sorted array one item at a time.
+         <b>Insertion</b> sort is a simple sorting algorithm that builds the final sorted array one item at a time.
       </li>
 <small>More Comming soon! (You can make suggestions as well :) )</small>
 </ul>
