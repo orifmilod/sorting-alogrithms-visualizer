@@ -13,6 +13,7 @@ export function createNode(x, y, state) {
   }
 }
 
+
 export function getNodeClass(state) {
   const stateClass = {
     [nodeStates.Wall]: 'wall',

@@ -27,6 +27,5 @@ export default function insertionSort(unsortedArray, arrayLength = unsortedArray
     history.push(createItem(i, arr[i].value + minimumValue, itemStates.Default))
     history.push(createItem(j + 1, arr[j + 1].value + minimumValue, itemStates.Default))
   }
-  console.log(arr)
   return { sorted: arr, history };
 }

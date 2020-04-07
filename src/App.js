@@ -1,27 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { toast } from 'react-toastify';
 
+import Home from './Pages/Home';
 import SortingVisualizer from './Pages/Sorting-Visualizer';
 import PathfindingVisualizer from './Pages/Pathfinding-Visualizer';
 
-import * as Pages from './constants/pages';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default function App() {
-  const [activePage, setActivePage] = useState(Pages.PathFinding);
+import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom'
 
+export default function App() {
   toast.configure();
-  function loadPage() {
-    const options = {
-      [Pages.PathFinding]:
-        <PathfindingVisualizer onChangePage={() => setActivePage(Pages.Sorting)} />,
-      [Pages.Sorting]:
-        <SortingVisualizer onChangePage={() => setActivePage(Pages.PathFinding)} />,
-    }
-    return options[activePage];
-  }
-  return (loadPage())
+  return (
+    <BrowserRouter>
+      <Switch>
+
+        <Route exact path='/' component={Home} />
+        <Route exact path='/sorting' component={SortingVisualizer} />
+        <Route exact path='/path-finding' component={PathfindingVisualizer} />
+
+        <Redirect to='/' />
+      </Switch>
+    </BrowserRouter>
+  )
 }
 

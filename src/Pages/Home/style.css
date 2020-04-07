@@ -1,0 +1,44 @@
+.gradDynamic {
+  position: relative;
+  background: #FFBC42;
+}
+
+/* 
+.gradDynamic:after,
+.gradDynamic:before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  content: '';
+  z-index: -1;
+}
+
+.gradDynamic:after {
+  background: radial-gradient(circle, #197ef9, transparent);
+  background-size: 400%;
+  animation: colorSpin 30s linear infinite;
+}
+
+.gradDynamic:before {
+  background-color: rgb(252, 215, 7);
+}
+
+@keyframes colorSpin {
+  25% {
+    background-position: 0 100%;
+  }
+
+  50% {
+    background-position: 100% 100%;
+  }
+
+  75% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    filter: hue-rotate(360deg);
+  }
+} */

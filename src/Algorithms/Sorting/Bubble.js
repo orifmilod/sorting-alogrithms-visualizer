@@ -42,7 +42,7 @@ export default function bubbleSort(unsortedArr) {
     for (var i = 0; i < arr.length - 1; i++) {
       history.push(createItem(i, arr[i].value + minimumValue, itemStates.Comparing));
       history.push(createItem(i + 1, arr[i + 1].value + minimumValue, itemStates.Comparing));
-      
+
       if (arr[i].value > arr[i + 1].value) {
         arr[i].value = arr[i].value + arr[i + 1].value;
         arr[i + 1].value = arr[i].value - arr[i + 1].value
@@ -64,3 +64,32 @@ export default function bubbleSort(unsortedArr) {
   return { sorted: arr, history };
 }
 
+
+// function getRandomInt(max) {
+//   return Math.floor(Math.random() * Math.floor(max));
+// }
+
+// let arr = new Array(10);
+// for (let i = 0; i < arr.length; i++) {
+//   arr[i] = getRandomInt(1000)
+// }
+
+// function bubble(arr) {
+//   var noSwaps;
+//   for (var i = arr.length; i > 0; i--) {
+//     noSwaps = true;
+//     for (var j = 0; j < i - 1; j++) {
+//       if (arr[j] > arr[j + 1]) {
+//         var temp = arr[j];
+//         arr[j] = arr[j + 1];
+//         arr[j + 1] = temp;
+//         noSwaps = false;
+//       }
+//     }
+//     if (noSwaps) break;
+//   }
+//   return arr;
+// }
+// console.time('Performance')
+// bubble(arr)
+// console.timeLog('Performance')

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';
 
+import { Link } from 'react-router-dom';
 import { Input } from '../../components/common';
 import { Column, Grid, PageContainer } from './styled';
 import Node, { createNode, getNodeClass, getNodeID } from './Node';
@@ -13,7 +14,7 @@ import dijkstra from '../../Algorithms/PathFinding/Dijsktra';
 
 import { getInitialGrid, updateNode } from './utils';
 
-export default function PathfindingVisualizer({ onChangePage }) {
+export default function Pathfinding() {
   const [grid, updateGrid] = useState([]);
   const [isVisualizing, setIsVisualizing] = useState(false);
   const [mouseIsPressed, updateMousePressed] = useState(false);
@@ -86,22 +87,21 @@ export default function PathfindingVisualizer({ onChangePage }) {
   }
 
   function toggleWall(x, y) {
-    const updatedState = grid[y][x].state === nodeStates.Default ?
-      nodeStates.Wall : nodeStates.Default;
+    const updatedState = grid[y][x].state === nodeStates.Default
+      ? nodeStates.Wall
+      : nodeStates.Default;
     return createNode(x, y, updatedState);
   }
 
   function handleMouseEnter(x, y) {
-    if (!mouseIsPressed || isVisualizing)
-      return;
+    if (!mouseIsPressed || isVisualizing) return;
     const newNode = toggleWall(x, y)
     const newGrid = updateNode(grid, newNode);
     updateGrid(newGrid);
   }
 
   function handleMouseUp() {
-    if (isVisualizing)
-      return;
+    if (isVisualizing) return;
     updateMousePressed(false);
   }
 
@@ -132,7 +132,9 @@ export default function PathfindingVisualizer({ onChangePage }) {
               </NavDropdown.Item>
             </NavDropdown>
             {/* <Nav.Link className='text-info' onClick={resetGrid}> Reset  </Nav.Link> */}
-            <Nav.Link onClick={onChangePage}> Sorting Visualizer  </Nav.Link>
+            <Nav.Link>
+              <Link to='/sorting'> Sorting Visualizer  </Link>
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
