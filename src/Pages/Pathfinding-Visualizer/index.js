@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';
 
-import { Link } from 'react-router-dom';
 import { Input } from '../../components/common';
 import { Column, Grid, PageContainer } from './styled';
 import Node, { createNode, getNodeClass, getNodeID } from './Node';
-import { Row, Col, Navbar, NavDropdown, Nav } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 
 import * as nodeStates from '../../constants/nodeState';
 import aStar from '../../Algorithms/PathFinding/A-Star';
@@ -13,17 +12,18 @@ import * as Algorithms from '../../constants/pathFinding';
 import dijkstra from '../../Algorithms/PathFinding/Dijsktra';
 
 import { getInitialGrid, updateNode } from './utils';
+import Navbar from './Navbar';
 
 export default function Pathfinding() {
-  const [grid, updateGrid] = useState([]);
+  const [grid, setGrid] = useState([]);
   const [isVisualizing, setIsVisualizing] = useState(false);
-  const [mouseIsPressed, updateMousePressed] = useState(false);
+  const [mouseIsPressed, setMousePressed] = useState(false);
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('');
   const [startNode, setStartNode] = useState(createNode(0, 0, nodeStates.Default))
   const [finishNode, setFinishNode] = useState(createNode(10, 10, nodeStates.Default))
 
   useEffect(() => {
-    updateGrid(getInitialGrid(55, 25, startNode, finishNode));
+    setGrid(getInitialGrid(55, 25, startNode, finishNode));
   }, [finishNode, startNode])
 
   function startVisualization() {
@@ -36,6 +36,7 @@ export default function Pathfinding() {
       toast.error('Please select an algorithm!');
       return;
     }
+
     const options = {
       [Algorithms.Astar]: aStar(grid, startNode, finishNode),
       [Algorithms.Dijkstra]: dijkstra(grid, startNode, finishNode),
@@ -82,8 +83,8 @@ export default function Pathfinding() {
     //Update node state, if Default change it to Wall, and vice versa
     const newNode = toggleWall(x, y);
     const newGrid = updateNode(grid, newNode);
-    updateGrid(newGrid);
-    updateMousePressed(true);
+    setGrid(newGrid);
+    setMousePressed(true);
   }
 
   function toggleWall(x, y) {
@@ -97,49 +98,32 @@ export default function Pathfinding() {
     if (!mouseIsPressed || isVisualizing) return;
     const newNode = toggleWall(x, y)
     const newGrid = updateNode(grid, newNode);
-    updateGrid(newGrid);
+    setGrid(newGrid);
   }
 
   function handleMouseUp() {
     if (isVisualizing) return;
-    updateMousePressed(false);
+    setMousePressed(false);
   }
 
   function resetGrid() {
     if (isVisualizing)
       return;
-    // const grid = getInitialGrid(55, 25, startNode, finishNode)
-    // updateGrid(grid);
+    const grid = getInitialGrid(55, 25, startNode, finishNode)
+    setGrid(grid);
   }
-
+  
   return (
     <PageContainer>
-      <Navbar bg="light" expand="lg">
-        <Navbar.Brand>
-          Pathfinding visualizer
-        </Navbar.Brand>
-
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto">
-            <Nav.Link className='text-info' onClick={startVisualization}> Start visualization </Nav.Link>
-            <NavDropdown title="Algorithms">
-              <NavDropdown.Item active={selectedAlgorithm === Algorithms.Astar} onClick={() => setSelectedAlgorithm(Algorithms.Astar)}>
-                A Start
-              </NavDropdown.Item>
-              <NavDropdown.Item active={selectedAlgorithm === Algorithms.Dijkstra} onClick={() => setSelectedAlgorithm(Algorithms.Dijkstra)}>
-                Dijkstra
-              </NavDropdown.Item>
-            </NavDropdown>
-            {/* <Nav.Link className='text-info' onClick={resetGrid}> Reset  </Nav.Link> */}
-            <Nav.Link>
-              <Link to='/sorting'> Sorting Visualizer  </Link>
-            </Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+      <Navbar
+        resetGrid={resetGrid}
+        selectedAlgorithm={selectedAlgorithm}
+        startVisualization={startVisualization}
+        setSelectedAlgorithm={setSelectedAlgorithm}
+      />
 
       <Col className='d-flex justify-content-center'>
+        {/* Start Point */}
         <Col xs={5} xl={2}>
           <Row> Start Point </Row>
           <Row className='flex-nowrap'>
@@ -168,6 +152,7 @@ export default function Pathfinding() {
             />
           </Row>
         </Col>
+        {/* Finish Point */}
         <Col xs={5} xl={2}>
           <Row>Finish point</Row>
           <Row className='flex-nowrap'>
@@ -198,7 +183,8 @@ export default function Pathfinding() {
           </Row>
         </Col>
       </Col>
-
+        
+      {/* Grid */}
       <Grid>
         {grid.map((row, indexRow) =>
           <Column key={indexRow}>
@@ -214,7 +200,6 @@ export default function Pathfinding() {
           </Column>
         )}
       </Grid>
-
-    </PageContainer >
+    </PageContainer>
   )
 }
