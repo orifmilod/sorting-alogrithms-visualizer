@@ -45,7 +45,7 @@ export default function Pathfinding() {
     animateGrid(result.checked, result.path);
   }
 
-  function animateShortestPath(nodesInShortestPathOrder) {
+  function animateShortestPath(nodesInShortestPathOrder, totalNodesVisited) {
     if (nodesInShortestPathOrder === -1) {
       toast.error("Sorry, couldn't find the path.")
       return;
@@ -56,18 +56,15 @@ export default function Pathfinding() {
         document.getElementById(getNodeID(node.x, node.y)).className = getNodeClass(nodeStates.ShortestPath);
       }, 50 * i);
     }
-    toast.success("Horray, found the path.");
-    toast.warn('Please refresh the page to visualize algorithm again, we haven not set up Clear button in website yet, work in progress!');
-
+    toast.info('We have visited ' + totalNodesVisited + ' nodes to find end point.', { autoClose: false })
+    toast.warn('Please refresh the page to visualize algorithm again, we haven not set up Clear button in website yet, work in progress!', { autoClose: false });
     setIsVisualizing(false);
   }
 
   function animateGrid(visitedNodesInOrder, nodesInShortestPathOrder) {
     for (let i = 0; i <= visitedNodesInOrder.length; i++) {
       if (i === visitedNodesInOrder.length) {
-        setTimeout(() => {
-          animateShortestPath(nodesInShortestPathOrder);
-        }, 10 * i);
+        setTimeout(() => animateShortestPath(nodesInShortestPathOrder, visitedNodesInOrder.length), 10 * i);
         return;
       }
       setTimeout(() => {
@@ -112,7 +109,7 @@ export default function Pathfinding() {
     const grid = getInitialGrid(55, 25, startNode, finishNode)
     setGrid(grid);
   }
-  
+
   return (
     <PageContainer>
       <Navbar

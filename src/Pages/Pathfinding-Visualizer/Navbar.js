@@ -26,10 +26,10 @@ export default ({ startVisualization, setSelectedAlgorithm, selectedAlgorithm, r
               Dijkstra
             </NavDropdown.Item>
           </NavDropdown>
-{/* 
-          <Nav.Link className='text-info' onClick={resetGrid}> 
+
+          <Nav.Link className='text-info' onClick={() => document.location.reload()}> 
             Reset
-          </Nav.Link> */}
+          </Nav.Link>
           <Nav.Link>
             <Link to='/sorting'> 
               Sorting Visualizer
