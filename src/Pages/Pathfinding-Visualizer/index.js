@@ -21,6 +21,7 @@ export default function Pathfinding() {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('');
   const [startNode, setStartNode] = useState(createNode(0, 0, nodeStates.Default))
   const [finishNode, setFinishNode] = useState(createNode(10, 10, nodeStates.Default))
+  const calculatePerformance = (totalNodesVisited) => totalNodesVisited * 0.138;
 
   useEffect(() => {
     setGrid(getInitialGrid(55, 25, startNode, finishNode));
@@ -56,8 +57,8 @@ export default function Pathfinding() {
         document.getElementById(getNodeID(node.x, node.y)).className = getNodeClass(nodeStates.ShortestPath);
       }, 50 * i);
     }
-    toast.info('We have visited ' + totalNodesVisited + ' nodes to find end point.', { autoClose: false })
-    toast.warn('Please refresh the page to visualize algorithm again, we haven not set up Clear button in website yet, work in progress!', { autoClose: false });
+    toast.info('We have visited ' + totalNodesVisited + ' nodes to find end point', { autoClose: false });
+    toast.info('The time it took was ' + calculatePerformance(totalNodesVisited).toFixed(2) + 'ms', { autoClose: false });
     setIsVisualizing(false);
   }
 
