@@ -1,4 +1,6 @@
-<h1>Pathfinding-Visualizer</h1>
+# Sorting Visualizer :fire:
+
+https://sorting-visualizer-js.firebaseapp.com/
 
 <p>
 Welcome to Pathfinding Visualizer! I built this application because I was fascinated by pathfinding algorithms, and I wanted to visualize them in action. I hope that you enjoy playing around with this visualization tool just as much as I enjoyed building it. You can access it here (use Google Chrome!): https://algorithms-visualization.web.app
@@ -22,3 +24,7 @@ Welcome to Pathfinding Visualizer! I built this application because I was fascin
       </li>
 <small>More Comming soon! (You can make suggestions as well :) )</small>
 </ul>
+
+## Live Demo :star:
+
+![preview](preview.png)
